@@ -148,7 +148,7 @@ Inode* search(Inode *node, char *name)
 {
     int i;
     Inode* result;
-    int no_of_children = node_name->numChildren;
+    int no_of_children = node_name->no_of_children;
     if(!(strcmp(node->name,name)))
         return node;
 
