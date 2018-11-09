@@ -123,19 +123,24 @@ void init_node(const char * path, char * name, Inode *parent,int type)
 //insert node function
 void insert_node(Inode *node)
 {
-    Inode *parent = node->parent;
-    //parent = search_node();
+    Inode *parent;
+    parent = 
+    //parent = searchNode(node);
 
     if(parent->children==NULL)
     {
         parent->no_of_children++;
-        parent->children[parent->no_of_children-1] = node;
+        parent->children[parent->no_of_children] = node;
+        parent->no_of_children++;
+        parent->child_inode[parent->no_of_children]=node->inode_num;
+        parent->no_of_children++;
     }
     else
     {
-        parent->children++;
+        parent->no_of_children++;
         parent->children=(Inode**)realloc(parent->children,sizeof(Inode*) * parent->num_children);
         parent->children[parent->no_of_children-1] = node;
+        parent->child_inode[parent->no_of_children]=node->inode_num;
     }
     return;
 }
