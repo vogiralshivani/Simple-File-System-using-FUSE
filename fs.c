@@ -102,7 +102,7 @@ void init_root()
 
 void init_node(const char * path, char * name, Inode *parent,int type)
 {
-	printf("Initializing Tree Node\n");
+    printf("Initializing Tree Node\n");
     Inode *new_node =(Inode*)malloc(sizeof(Inode));
     new_node->path = (char *)calloc(sizeof(char), strlen(path) + 1);
     new_node->name = (char *)calloc(sizeof(char), strlen(name) + 1);
@@ -116,54 +116,28 @@ void init_node(const char * path, char * name, Inode *parent,int type)
     new_node->children = NULL;
     new_node->file.data = "";
     new_node->file.size = 0;
-    return new_node;	
+    insert_node(new_node);
+    return new_node;    
 }
 
 //insert node function
-void insert_node(const char *path)
+void insert_node(Inode *node)
 {
-    printf("Inserting a Node\n");
-    if(root == NULL)
+    Inode *parent;
+    parent = searchNode(node);
+
+    if(parent->children==NULL)
     {
-        printf("Root Node does not exist\nCreating Root\n");
-        root = initNode("/", "root", NULL,1);
-        printf("Root Initialized\n");
-        return;
+        parent->no_of_children++;
+        parent->children[parent->no_of_children-1] = node;
     }
     else
     {
-        char *temp = (char *)path;
-        char *dir = extractDir(&copy_path);
-        Inode *new_node = NULL;
-        if(strlen(temp) == 1) //root node
-        {   
-            root->num_children++;
-            if(root->children == NULL) //root has no children
-            {
-                root->children = (Inode **)malloc(sizeof(Inode *));
-                root->no_of_children++;
-                root->children[root->no_of_children-1]=init_node(path, dir, root,1);
-            }
-            else{
-                root->children = (Inode**)realloc(root->children,sizeof(Inode*)*root->num_children);
-                root->children[root->no_of_children - 1] = init_node(path, dir, root,1);
-            }
-        }
-        else //a directory inside root node
-        {
-            dir_node = searchNode(copy_path);  
-            if(dir_node != NULL)
-            {
-
-                dir_node->num_children++;
-                dir_node->children = (Inode**)realloc(dir_node->children, sizeof(Inode*) * dir_node->no_of_children);
-                dir_node->children[dir_node->no_of_children-1] = init_node(path, dir, dir_node,1);
-            }
-        }
-        return;
+        parent->children++;
+        parent->children=(Inode**)realloc(parent->children,sizeof(Inode*) * parent->num_children);
+        parent->children[parent->no_of_children-1] = node;
     }
     return;
-
 }
 //end of insert node
 
