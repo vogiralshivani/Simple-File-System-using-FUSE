@@ -129,9 +129,7 @@ void insert_node(Inode *node)
 
     if(parent->children==NULL)
     {
-        parent->no_of_children++;
         parent->children[parent->no_of_children] = node;
-        parent->no_of_children++;
         parent->child_inode[parent->no_of_children]=node->inode_num;
         parent->no_of_children++;
     }
