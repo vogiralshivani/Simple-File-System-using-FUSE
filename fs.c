@@ -112,6 +112,7 @@ void init_node(const char * path, char * name, Inode *parent,int type)
     new_node->no_of_children = 0;
     new_node->size = 0;
     new_node->inode_num = parent->inode_num + parent->no_of_children;
+    new_node->child_inode = NULL;
     new_node->parent = parent;
     new_node->children = NULL;
     new_node->file.data = "";
@@ -127,23 +128,52 @@ void insert_node(Inode *node)
     parent = node->parent;
     //parent = searchNode(node);
 
-    if(parent->children==NULL)
+    if(parent->children!=NULL)
     {
-        parent->children[parent->no_of_children] = node;
-        parent->child_inode[parent->no_of_children]=node->inode_num;
-        parent->no_of_children++;
+        parent->children=(Inode**)realloc(parent->children,sizeof(Inode*) * parent->no_of_children+1);
+        parent->child_inode =(int*)realloc(parent->child_inode, sizeof(int)*parent->no_of_children+1)
     }
     else
     {
-        parent->no_of_children++;
-        parent->children=(Inode**)realloc(parent->children,sizeof(Inode*) * parent->num_children);
-        parent->children[parent->no_of_children-1] = node;
-        parent->child_inode[parent->no_of_children]=node->inode_num;
+    	parent->children=(Inode**)malloc(sizeof(Inode*));
+    	parent->child_inode = (int*)malloc(sizeof(int));
     }
-    return;
+    parent->children[parent->no_of_children] = node;
+    parent->child_inode[parent->no_of_children]=node->inode_num;
+    parent->no_of_children++;
 }
 //end of insert node
 
+Inode* search(Inode *node, char *name)
+{
+    int i;
+    Inode* result;
+    int no_of_children = node_name->numChildren;
+    if(!(strcmp(node->name,name)))
+        return node;
+
+    if(no_of_children == 0)
+        return NULL;
+
+    for(i = 0;i < no_of_children;i++)
+    {
+        if(node->children[i]->type == 1)
+        {
+            if(!(strcmp(node->children[i]->name,name)))
+                return node;
+
+            result = search(node->children[i],name);
+            if(result != NULL)
+                return result;
+        }
+        else
+        {
+            if(!(strcmp(node_name->children[i]->name,name)))
+                return node_name;
+        }
+    }
+    return NULL;
+}
 
 static int sys_getattr(const char* path, struct stat *st)
 {
