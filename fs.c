@@ -124,7 +124,7 @@ void init_node(const char * path, char * name, Inode *parent,int type)
 void insert_node(Inode *node)
 {
     Inode *parent;
-    parent = 
+    parent = node->parent;
     //parent = searchNode(node);
 
     if(parent->children==NULL)
