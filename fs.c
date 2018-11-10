@@ -200,6 +200,71 @@ static int sys_getattr(const char* path, struct stat *st)
 	st->st_mtime = time(NULL);
 	return 0;
 }
+//START OF DELETE NODE
+int deleteNode(const char *path)
+{
+    char *filename = find_file_name(path);//directory node which has the specified file name;
+    Inode *parent = NULL;
+    parent = search(root,filename);
+
+    if(strcmp(filename,"/") && strcmp(node->name,"/"))
+    {
+        return -1;
+    }
+    if(node->no_children==0)
+    {
+        return -1;
+    }
+
+    if(node->no_of_children==1 && (!strcmp(node->children[0]->name,filename)))
+    {
+        return -1;
+    }
+    else
+    {
+        free(node->children[0])
+        //DISK CHANGES HAVE TO BE MADE HERE SINCE FILE IS GETTING DELETED
+        node->no_of_children--;
+
+    }
+
+    int i;
+    int flag=0;
+    int pos;
+    for(i=0;i<node->no_of_children;i++)
+    {
+        if(strcmp(node->children[i]->name),filename)
+        {
+            flag=1;
+            pos=i;
+            break;
+        }
+    }
+
+    if(flag==0)
+    {
+        return -1;
+    }
+
+    if(flag==1)
+    {
+        int j;
+        for(j=i;i<node->no_children-1;j++)
+        {
+            node->children[j]=node->children[j+1];
+        }
+        //DISK CHANGES HAVE TO BE MADE HERE SINCE FILE IS GETTING DELETED
+        node->no_of_children--;
+        return 1;
+    }
+}
+
+char *find_file_name(char *path)
+{
+    char *str = basename(char *path); //basename returns the name of the file;
+    //it is present in <libgen.h>
+}
+//END OF DELETE NODE
 
 static int do_readdir(const char *path, void *buffer, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi )
 {
