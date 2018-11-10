@@ -1,16 +1,13 @@
-/*
+#include "fs.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 int no_of_blocks = INISIZE/BLKSIZE;
 int inode_bitmap[no_of_blocks];
 int data_bitmap[no_of_blocks];
 File fblocks[no_of_blocks];
 Inode inodeblocks[no_of_blocks];
-*/
-
-
-#include "fs.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 
 
