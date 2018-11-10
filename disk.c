@@ -37,7 +37,7 @@ void write_to_disk_wrapper()
 void write_to_disk(Inode *node)
 {
 	static int i=1;
-	if(node->type==0)
+	if(node->type==0 && i<=(no_of_blocks-1))
 	{
 		inode_bitmap[i] = 1;
 		data_bitmap[i] = 1;
