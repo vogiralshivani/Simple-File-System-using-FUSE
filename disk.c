@@ -54,7 +54,7 @@ void write_to_disk(Inode *node)
 		int j=0;
 		for(j=0;i<node->no_of_children;j++)
 		{
-			write_to_disk(node->children[i]);
+			write_to_disk(node->children[j]);
 		}
 	}
 	return;
