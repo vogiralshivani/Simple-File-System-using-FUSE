@@ -254,9 +254,10 @@ int deleteNode(const char *path)
         {
             node->parent->children[j]=node->parent->children[j+1];
         }
-        //node->parent->child_inode[node->no_of_children]
+	node->parent->no_of_children--;
+        node->parent->child_inode = realloc(node->parent->child_inode,node->parent->no_of_children*(sizeof(int)));
         //DISK CHANGES HAVE TO BE MADE HERE SINCE FILE IS GETTING DELETED
-        node->parent->no_of_children--;
+        
         return 0;
     }
 }
