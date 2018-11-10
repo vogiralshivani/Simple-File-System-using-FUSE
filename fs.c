@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "fs.h"
+#include <libgen.h>
 //HELPER FUNCTIONS
 char *extractPath(char ** copy_path){
 	printf("Path being extracted\n");
