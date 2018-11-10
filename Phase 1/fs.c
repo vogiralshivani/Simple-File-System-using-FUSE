@@ -538,5 +538,5 @@ int main( int argc, char *argv[] ){
 //	read_from_disk();
 	//printf("d_bitmap %d\n",i_bitmap[0]);
 	init_root();
-	return fuse_main( argc, argv, &operations);
+	return fuse_main( argc, argv, &oper ations);
 }
