@@ -29,7 +29,7 @@ char *extractPath(char ** copy_path)
         }
         tempstr = (char *)calloc(sizeof(char) , (p_len + 2));
         strcpy(tempstr, path);
-        p_len += 1;
+        p_len += 1; 
         tempstr[p_len - 1] = temp;
         path = (char *)realloc(path, sizeof(char) * (p_len + 2));
         strcpy(path, tempstr);
