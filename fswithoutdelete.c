@@ -444,6 +444,66 @@ static int sys_write(const char *path, const char *buf, size_t size, off_t offse
 	return size;	
 }
 
+//delete node
+int deleteNode(const char *path)
+{
+    char *filename = extract_name(path);
+    Inode *node = NULL;
+    node = search(root,filename);
+
+
+    if(node==NULL)
+    {
+        printf("ERROR FILE NOT FOUND\n");
+        return -1;
+    }
+
+    if(strcmp(filename,"/")==0)
+    {
+        printf("ERROR CANNOT DELETE ROOT DIRECTORY\n");
+    }
+
+    if(node->type==1 && node->no_of_children>0)
+    {
+        printf("ERROR CANNOT DELETE DIRECTORY WITH FILES IN IT\n");
+        return -1;
+    }
+
+    if(node->type==1 && node->no_of_children==0)
+    {
+        node->parent->no_of_children--;
+        free(node);
+        write_to_disk_wrapper();
+        return 0; //success
+    }
+
+    int temp_inum = node->inode_num;
+    char *dirname = extractDir(path);
+
+    Inode *temp = search(root,dirname);
+    free(node);
+    temp->no_of_children--;
+    temp->child_inode[temp_inum] = -1;
+
+
+
+    int new_child_inode[temp->no_of_children];
+    int i;
+    int j=0;
+    for(i=0;i<temp->no_of_children;i++)
+    {
+        if(temp->child_inode[i]!=-1)
+        {
+            new_child_inode[j] = temp->child_inode[i];
+            j++;
+        }
+    }
+    parent->child_inode = new_child_inode;
+    write_to_disk_wrapper();
+    return 0; //success
+
+}
+
 
 
 int main( int argc, char *argv[] ){
