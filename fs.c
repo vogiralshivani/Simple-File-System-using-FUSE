@@ -204,36 +204,37 @@ static int sys_getattr(const char* path, struct stat *st)
 int deleteNode(const char *path)
 {
     char *filename = find_file_name(path);//directory node which has the specified file name;
-    Inode *parent = NULL;
-    parent = search(root,filename);
+    Inode *node = NULL;
+    node = search(root,filename);
 
-    if(strcmp(filename,"/") && strcmp(node->name,"/"))
+    if(strcmp(filename,"/") && strcmp(node->parent->name,"/"))
     {
         return -1;
     }
-    if(node->no_children==0)
+    if(node->parent->no_children==0)
     {
         return -1;
     }
 
-    if(node->no_of_children==1 && (!strcmp(node->children[0]->name,filename)))
+    if(node->parent->no_of_children==1 && (!strcmp(node->parent->children[0]->name,filename)))
     {
         return -1;
     }
     else
     {
-        free(node->children[0])
+        free(node->parent->children[0])
         //DISK CHANGES HAVE TO BE MADE HERE SINCE FILE IS GETTING DELETED
-        node->no_of_children--;
+        node->parent->no_of_children--;
+        return 0;
 
     }
 
     int i;
     int flag=0;
     int pos;
-    for(i=0;i<node->no_of_children;i++)
+    for(i=0;i<node->parent->no_of_children;i++)
     {
-        if(strcmp(node->children[i]->name),filename)
+        if(strcmp(node->parent->children[i]->name),filename)
         {
             flag=1;
             pos=i;
@@ -249,15 +250,17 @@ int deleteNode(const char *path)
     if(flag==1)
     {
         int j;
-        for(j=i;i<node->no_children-1;j++)
+        for(j=i;i<node->parent->no_of_children-1;j++)
         {
-            node->children[j]=node->children[j+1];
+            node->parent->children[j]=node->parent->children[j+1];
         }
+        //node->parent->child_inode[node->no_of_children]
         //DISK CHANGES HAVE TO BE MADE HERE SINCE FILE IS GETTING DELETED
-        node->no_of_children--;
-        return 1;
+        node->parent->no_of_children--;
+        return 0;
     }
 }
+
 
 char *find_file_name(char *path)
 {
