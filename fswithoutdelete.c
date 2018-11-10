@@ -29,7 +29,7 @@ char *extractPath(char ** copy_path)
         }
         tempstr = (char *)calloc(sizeof(char) , (p_len + 2));
         strcpy(tempstr, path);
-        p_len += 1; 
+        p_len += 1;
         tempstr[p_len - 1] = temp;
         path = (char *)realloc(path, sizeof(char) * (p_len + 2));
         strcpy(path, tempstr);
@@ -91,20 +91,45 @@ char *extractDir(char *path){
     dir[d_len] = '\0';
     dir = reverse(dir, 0);        
     *(copy_path) = reverse(*(copy_path), 0);
-    return dir;*/if(strcmp(path,"/")==0)
+    return dir;*/
+    /*if(strcmp(path,"/")==0)
 		return path;
   	char str[strlen(path)];
   	strcpy(str,path);
     char* token = strtok(str, "/");
+    printf("extractdir_token: %s\n",token );
     char*prev_token = (char*)malloc(sizeof(char)*strlen(path)); 
     strcpy(prev_token, "/");
     char* token_dir = (char*)malloc(sizeof(char)*strlen(path));
     while (token != NULL) { 
+    	printf("in while of extract dir\n");
     	strcpy(token_dir, prev_token);
     	strcpy(prev_token,token);
         token = strtok(NULL, "/"); 
+        printf("DIRECTORY: %s\n", token_dir);
+        printf("PrevTOKEN: %s\n", prev_token);
+        printf("TOKEN: %s\n", token);
     } 
+    printf("out while of extract dir\n");
     printf("DIRECTORY: %s\n", token_dir);
+    return token_dir;*/
+    printf("exname_dir:%s\n", path);
+	if(strcmp(path,"/")==0)
+		return path;
+  	char str[strlen(path)];
+  	strcpy(str,path);
+    char* token = strtok(str, "/"),*prev_token = malloc(sizeof(char)*strlen(path)), *token_dir = malloc(sizeof(char)*strlen(path)); 
+    strcpy(prev_token, "/");
+    while (token != NULL) { 
+    	strcpy(token_dir, prev_token);
+    	strcpy(prev_token,token);
+        token = strtok(NULL, "/"); 
+        printf("TOKENDIR: %s\n", token_dir);
+        printf("PrevTOKEN: %s\n", prev_token);
+        printf("TOKEN: %s\n", token);
+
+    } 
+    printf("DIR NAME: %s\n", token_dir);
     return token_dir;
 }
 //END OF HELPER FUNCTIONS
@@ -120,6 +145,9 @@ char *extract_name(char *path)
     while (token != NULL) { 
     	strcpy(prev_token,token);
         token = strtok(NULL, "/"); 
+        printf("PrevTOKEN: %s\n", prev_token);
+        printf("TOKEN: %s\n", token);
+
     } 
     printf("NAME: %s\n", prev_token);
     return prev_token;
@@ -213,8 +241,8 @@ Inode* search(Inode *node, char *name)
             if(!(strcmp(node->children[i]->name,name)))
             {
                 	printf("CHILD RETURNED\n");
-
-                return node;
+                    printf("CHILD: %s\n", node->children[i]->name);
+                return node->children[i];
             }
 
             result = search(node->children[i],name);
@@ -323,12 +351,15 @@ static int sys_readdir(const char *path, void *buffer, fuse_fill_dir_t filler, o
 	char* temp_path = path;
 	if(strcmp(path, "/") == 0)
 	{
+        printf("IN IF\n");
 		printf("PATH IS ROOT\n");
 		I = root;
 	}
 	else
 	{
+        printf("IN ELSE\n");
 		char* temp_name = extract_name(temp_path);
+        printf("readdir_tempname: %s\n", temp_name);
 		I = search(root, temp_name);
 		printf("PATH IS %s", I->name);//found inode
 		printf("CHildren: %d\n",I->no_of_children );
@@ -358,9 +389,11 @@ static int sys_mknod(const char * path, mode_t x, dev_t y){
 	printf("Make Node\n");
 	int type = 0;
 	char* temp_path = path;
-	char* temp_dir = extractDir(&temp_path);
+	char* temp_dir = extractDir(temp_path);
+	printf("mknode_tempdir: %s\n", temp_dir);
 	char* name = extract_name(temp_path);
 	Inode* parent = search(root, temp_dir);
+	printf("mknodPARENT: %s\n", parent->name);
 	init_node(temp_path, name, parent, type);
 //	write_into_disk();
 	return 0;
