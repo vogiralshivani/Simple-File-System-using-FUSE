@@ -20,53 +20,53 @@ char *filename = "fsdata";
 void write_to_disk_wrapper()
 {
     printf("here in disk write_to_disk_wrapper\n"); 
-    FILE *fp = fopen(filename,"wb"); 
+     
+    FILE *fp = fopen(filename,"wb");
+    int i=0;
     Inode *temp = root;
 
     //writing root node
-    inode_bitmap[0] = 1;
-    data_bitmap[0] = 1;
-    inodeblocks[0] = *temp;
-    fwrite(inodeblocks,sizeof(Inode),1,fp);
+    inode_bitmap[i] = 1;
+    data_bitmap[i] = 1;
+    inodeblocks[i] = *temp;
+    i++;
+    fwrite(inodeblocks,sizeof(inodeblocks),1,fp);
     int j;
     int n=temp->no_of_children;
     for(j=0;j<n;j++)
     {
         printf("in for\n");
-        write_to_disk(temp->children[j],fp);
+        write_to_disk(temp->children[j],fp,&i);
     }
+
+    fclose(fp);
 
 }
 
-void write_to_disk(Inode *node, FILE *fp)
+void write_to_disk(Inode *node, FILE *fp, int *i)
 {
     printf("in write_to_disk\n");
-    static int i=1;
-    if(node->type==0 && i<=(no_of_blocks-1))
+    //static int i=1;
+    if(node->type==0)
     {
-        inode_bitmap[i] = 1;
-        data_bitmap[i] = 1;
-        inodeblocks[i] = *node;
-        printf("Here\n\n");
-        printf("path = %s\n\n",inodeblocks[i].path);
-        printf("file  = %s\n\n",inodeblocks[i].file.data);
-        
-   
-        fwrite(inodeblocks,sizeof(Inode),1,fp);
+        inode_bitmap[*i] = 1;
+       
+        inodeblocks[*i] = *node;
 
+        *(i++);   
+        fwrite(inodeblocks,sizeof(inodeblocks),1,fp);
+        printf("i = %d\n",*i );
 
-        i++;
-        return;
     }   
     else
     {
         int j=0;
         for(j=0;i<node->no_of_children;j++)
         {
-            write_to_disk(node->children[j], fp);
+            write_to_disk(node->children[j], fp,i);
         }
     }
-    return;
+    //return;
 }
 //HELPER FUNCTIONS
 /*char *extractPath(char ** copy_path)
