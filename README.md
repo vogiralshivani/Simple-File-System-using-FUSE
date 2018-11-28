@@ -17,6 +17,6 @@ Once the mount point gets created in the Desktop open a terminal and type <br>
 Open a terminal in the mountpoint and run the Unix commands <br>
 
 # Note
-Create a new directory called mountpoint before executing the above mentioned commands
+Create a new directory called `mountpoint` before executing the above mentioned commands
 
 
