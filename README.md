@@ -10,8 +10,9 @@ In order to mount the file system, run the following commands: <br>
 gcc -W fs.c -o fs `pkg-config fuse --cflags --libs` -DFUSE_USE_VERSION=25 -D_FILE_OFFSET_BITS=64 -lm -g -w <br>
 ./fs -f /home/(username)/Desktop/mountpoint <br>
 
-Mount point gets created in the Desktop <br>
-Open a terminal and type <br>
-`cd Desktop` <br>
-`cd mountpoint` <br>
+Once the mount point gets created in the Desktop open a terminal and type <br>
+1. `cd Desktop` <br> 
+2. `cd mountpoint` <br>
 Open a terminal in the mountpoint and run the Unix commands <br>
+
+
