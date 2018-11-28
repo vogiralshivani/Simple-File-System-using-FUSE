@@ -5,6 +5,6 @@ gcc -W fs.c -o fs `pkg-config fuse --cflags --libs` -DFUSE_USE_VERSION=25 -D_FIL
 
 Mount point gets created in the Desktop <br>
 Open a terminal and type <br>
-cd Desktop <br>
-cd mountpoint <br>
+`cd Desktop` <br>
+`cd mountpoint` <br>
 Open a terminal in the mountpoint and run the Unix commands <br>
